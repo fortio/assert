@@ -84,12 +84,35 @@ func Fail(t *testing.T, msg string) {
 	t.Fatal(msg)
 }
 
+// CheckEquals checks if actual == expect and fails the test and logs
+// failure (including filename:linenum if they are not equal).
+func CheckEquals(t *testing.T, actual interface{}, expected interface{}, msg interface{}) {
+	if expected != actual {
+		_, file, line, _ := runtime.Caller(1)
+		file = file[strings.LastIndex(file, "/")+1:]
+		fmt.Printf("%s:%d mismatch!\nactual:\n%+v\nexpected:\n%+v\nfor %+v\n", file, line, actual, expected, msg)
+		t.Fail()
+	}
+}
+
+// Assert is similar to True() under a different name and earlier
+// fortio/stats test implementation.
+func Assert(t *testing.T, cond bool, msg interface{}) {
+	if !cond {
+		_, file, line, _ := runtime.Caller(1)
+		file = file[strings.LastIndex(file, "/")+1:]
+		fmt.Printf("%s:%d assert failure: %+v\n", file, line, msg)
+		t.Fail()
+	}
+}
+
 type hasT interface {
 	T() *testing.T
 	SetT(*testing.T)
 }
 
 // TestSuite to be used as base struct for test suites.
+// replaces https://pkg.go.dev/github.com/stretchr/testify@v1.8.0/suite
 type TestSuite struct {
 	t *testing.T
 }
@@ -112,6 +135,7 @@ type hasTearDown interface {
 }
 
 // Run runs the test suite with SetupTest first and TearDownTest after.
+// replaces https://pkg.go.dev/github.com/stretchr/testify/suite#Run
 func Run(t *testing.T, suite hasT) {
 	suite.SetT(t)
 	tests := []testing.InternalTest{}
