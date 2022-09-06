@@ -12,11 +12,8 @@ import (
 	"testing"
 )
 
-// Testify is a short replacement for github.com/stretchr/testify/assert.
-type Testify struct{}
-
 // ObjectsAreEqualValues returns true if a == b (through refection).
-func (d *Testify) ObjectsAreEqualValues(a, b interface{}) bool {
+func ObjectsAreEqualValues(a, b interface{}) bool {
 	return reflect.DeepEqual(a, b)
 }
 
@@ -29,61 +26,61 @@ func Errorf(t *testing.T, format string, rest ...interface{}) {
 }
 
 // NotEqual checks for a not equal b.
-func (d *Testify) NotEqual(t *testing.T, a, b interface{}, msg ...string) {
-	if d.ObjectsAreEqualValues(a, b) {
+func NotEqual(t *testing.T, a, b interface{}, msg ...string) {
+	if ObjectsAreEqualValues(a, b) {
 		Errorf(t, "%v unexpectedly equal: %v", a, msg)
 	}
 }
 
 // EqualValues checks for a equal b.
-func (d *Testify) EqualValues(t *testing.T, a, b interface{}, msg ...string) {
-	if !d.ObjectsAreEqualValues(a, b) {
+func EqualValues(t *testing.T, a, b interface{}, msg ...string) {
+	if !ObjectsAreEqualValues(a, b) {
 		Errorf(t, "%v unexpectedly not equal %v: %v", a, b, msg)
 	}
 }
 
 // Equal also checks for a equal b.
-func (d *Testify) Equal(t *testing.T, a, b interface{}, msg ...string) {
-	d.EqualValues(t, a, b, msg...)
+func Equal(t *testing.T, a, b interface{}, msg ...string) {
+	EqualValues(t, a, b, msg...)
 }
 
 // NoError checks for no errors (nil).
-func (d *Testify) NoError(t *testing.T, err error, msg ...string) {
+func NoError(t *testing.T, err error, msg ...string) {
 	if err != nil {
 		Errorf(t, "expecting no error, got %v: %v", err, msg)
 	}
 }
 
 // Error checks/expects an error.
-func (d *Testify) Error(t *testing.T, err error, msg ...string) {
+func Error(t *testing.T, err error, msg ...string) {
 	if err == nil {
 		Errorf(t, "expecting an error, didn't get it: %v", msg)
 	}
 }
 
 // True checks bool is true.
-func (d *Testify) True(t *testing.T, b bool, msg ...string) {
+func True(t *testing.T, b bool, msg ...string) {
 	if !b {
 		Errorf(t, "expecting true, didn't: %v", msg)
 	}
 }
 
 // False checks bool is false.
-func (d *Testify) False(t *testing.T, b bool, msg ...string) {
+func False(t *testing.T, b bool, msg ...string) {
 	if b {
 		Errorf(t, "expecting false, didn't: %v", msg)
 	}
 }
 
 // Contains checks that needle is in haystack.
-func (d *Testify) Contains(t *testing.T, haystack, needle string, msg ...string) {
+func Contains(t *testing.T, haystack, needle string, msg ...string) {
 	if !strings.Contains(haystack, needle) {
 		Errorf(t, "%v doesn't contain %v: %v", haystack, needle, msg)
 	}
 }
 
 // Fail fails the test.
-func (d *Testify) Fail(t *testing.T, msg string) {
+func Fail(t *testing.T, msg string) {
 	t.Fatal(msg)
 }
 
@@ -115,7 +112,7 @@ type hasTearDown interface {
 }
 
 // Run runs the test suite with SetupTest first and TearDownTest after.
-func (d *Testify) Run(t *testing.T, suite hasT) {
+func Run(t *testing.T, suite hasT) {
 	suite.SetT(t)
 	tests := []testing.InternalTest{}
 	methodFinder := reflect.TypeOf(suite)
