@@ -81,7 +81,10 @@ func Contains(t *testing.T, haystack, needle string, msg ...string) {
 
 // Fail fails the test.
 func Fail(t *testing.T, msg string) {
-	t.Fatal(msg)
+	_, file, line, _ := runtime.Caller(1)
+	file = file[strings.LastIndex(file, "/")+1:]
+	fmt.Printf("%s:%d failed %s\n", file, line, msg)
+	t.FailNow()
 }
 
 // CheckEquals checks if actual == expect and fails the test and logs
