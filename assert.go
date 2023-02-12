@@ -41,7 +41,9 @@ func EqualValues(t *testing.T, a, b interface{}, msg ...string) {
 
 // Equal also checks for a equal b.
 func Equal(t *testing.T, a, b interface{}, msg ...string) {
-	EqualValues(t, a, b, msg...)
+	if !ObjectsAreEqualValues(a, b) {
+		Errorf(t, "%v unexpectedly not equal %v: %v", a, b, msg)
+	}
 }
 
 // NoError checks for no errors (nil).
