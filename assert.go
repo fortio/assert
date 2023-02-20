@@ -21,7 +21,7 @@ func ObjectsAreEqualValues(a, b interface{}) bool {
 func Errorf(t *testing.T, format string, rest ...interface{}) {
 	_, file, line, _ := runtime.Caller(2)
 	file = file[strings.LastIndex(file, "/")+1:]
-	fmt.Printf("%s:%d %s", file, line, fmt.Sprintf(format, rest...))
+	fmt.Printf("%s:%d %s\n", file, line, fmt.Sprintf(format, rest...))
 	t.Fail()
 }
 
