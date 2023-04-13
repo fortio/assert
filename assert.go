@@ -102,11 +102,12 @@ func CheckEquals(t *testing.T, actual interface{}, expected interface{}, msg int
 
 // Assert is similar to True() under a different name and earlier
 // fortio/stats test implementation.
-func Assert(t *testing.T, cond bool, msg interface{}) {
+func Assert(t *testing.T, cond bool, msg string, rest ...interface{}) {
 	if !cond {
 		_, file, line, _ := runtime.Caller(1)
 		file = file[strings.LastIndex(file, "/")+1:]
-		fmt.Printf("%s:%d assert failure: %+v\n", file, line, msg)
+		m := fmt.Sprintf(msg, rest...)
+		fmt.Printf("%s:%d assert failure: %s\n", file, line, m)
 		t.Fail()
 	}
 }
