@@ -114,7 +114,7 @@ func Assert(t *testing.T, cond bool, msg string, rest ...interface{}) {
 
 type hasT interface {
 	T() *testing.T
-	SetT(*testing.T)
+	SetT(t *testing.T)
 }
 
 // TestSuite to be used as base struct for test suites.
@@ -162,7 +162,7 @@ func Run(t *testing.T, suite hasT) {
 		}
 		test := testing.InternalTest{
 			Name: method.Name,
-			F: func(t *testing.T) {
+			F: func(_ *testing.T) {
 				method.Func.Call([]reflect.Value{reflect.ValueOf(suite)})
 			},
 		}
